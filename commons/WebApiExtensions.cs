@@ -39,6 +39,7 @@ public static class WebApiExtensions
             };
             x.SerializerSettings.Converters.Add(new TimestampJsonConverter());
             x.SerializerSettings.Converters.Add(new TimestampNullableJsonConverter());
+            x.SerializerSettings.Converters.Add(new DocumentReferenceJsonConverter());
         });
         return service;
     }

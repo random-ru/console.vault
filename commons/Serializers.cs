@@ -6,6 +6,17 @@ using Newtonsoft.Json;
 
 namespace vault.commons;
 
+public class DocumentReferenceJsonConverter : JsonConverter<DocumentReference>
+{
+    public override void WriteJson(JsonWriter writer, DocumentReference value, JsonSerializer serializer) 
+        => writer.WriteValue($"{value.Path}");
+
+    public override DocumentReference ReadJson(JsonReader reader, Type objectType, DocumentReference existingValue, 
+        bool hasExistingValue, JsonSerializer serializer)
+    {
+        throw new NotSupportedException();
+    }
+}
 
 public class TimestampJsonConverter : JsonConverter<Timestamp>
 {

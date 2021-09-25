@@ -8,4 +8,6 @@ public static class Scaffold
     {
         description = ""
     };
+
+    public static object EmptyApp = new { _AUTH_ = "" };
 }

@@ -1,5 +1,7 @@
 using System;
 using System.Net;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -21,7 +23,11 @@ builder.Services
     .AddWebApi()
     .AddScoped<IStoreAdapter, FireStoreAdapter>()
     .AddSwaggerGen(c =>
-        c.SwaggerDoc("v1", new() { Title = "Console Vault", Version = "v1" }))
+    {
+        c.SwaggerDoc("v1", new() { Title = "Console Vault", Version = "v1" });
+        c.EnableAnnotations();
+    })
+    .AddSwaggerGenNewtonsoftSupport()
     .AddRouting(options => options.LowercaseUrls = true);
 
 var app = builder.Build();
@@ -31,6 +37,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.UseSwagger();
+app.UseAuthentication();
 app.UseSwaggerUI(c => 
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Console Vault v1"));
 
@@ -42,11 +49,12 @@ app.UseExceptionHandler(x => x.Run(context =>
 
     context.Response.StatusCode = 200;
 
-    if (exception is VaultException s1)
-        return context.Response.WriteAsJsonAsync(new { message = s1.Message });
+    if (exception is SpaceNotFoundException or AppNotFoundException or FieldNotFoundException)
+        context.Response.StatusCode = 404;
+    else
+        context.Response.StatusCode = 500;
 
-    context.Response.StatusCode = 500;
-    return context.Response.WriteAsJsonAsync(new { });
+    return context.Response.WriteAsJsonAsync(new { message = exception?.Message });
 }));
 
 app.Run();

@@ -18,7 +18,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "GOOGLE_APPLICATION_CREDENTIALS": "C:\\git\\additional-resource\\fe1543e1b7f1.json",
         "FIRESTORE_PROJECT_ID": "ruler-rune",
-        "NO_AUTH": true
+        "NO_AUTH": true,
+        "ValidAudience": ""
       }
     },
     "IIS Express": {
